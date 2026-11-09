@@ -84,7 +84,7 @@ movies = [
 ]
 
 
-def avarage_rating(movies):
+def average_rating(movies):
     ratings = [movie["rating"] for movie in movies]
     return round(sum(ratings) / len(ratings), 1)
 
@@ -103,10 +103,43 @@ def duration_in_hours(minutes):
     return f"{hours}ч {remaining_minutes}м"
 
 
+def rating_tier(rating):
+    if rating >= 9:
+        return "шедевр"
+    elif rating >= 7:
+        return "хорошо"
+    elif rating >= 5:
+        return "средне"
+    else:
+        return "слабо" if rating < 5 else "средне"
+
+
+def decade_label(year):
+    match year:
+        case _ if year > 2020:
+            return "новые"
+        case _ if year >= 2015:
+            return "недавние"
+        case _:
+            return "старые"
+
+
 def main():
-    print(f"Средняя оценка: {avarage_rating(movies)}")
-    print(f"Возрастной диапазон(старый, новый, средний): {catalog_age_stats(movies)}")
-    print(f"155 минут в часах: {duration_in_hours(155)}")
+    print("Этап 1")
+    print(f"  Средняя оценка: {average_rating(movies)}")
+    print(
+        f"  Возрастной диапазон (старый, новый, средний): {catalog_age_stats(movies)}"
+    )
+    print(f"  155 минут в часах: {duration_in_hours(155)}")
+
+    print("\nЭтап 2")
+    for movie in movies:
+        tier = rating_tier(movie["rating"])
+        decade = decade_label(movie["year"])
+        print(
+            f"  {movie['title']:<25} rating = {movie['rating']:<4} "
+            f"- {tier:<9} year = {movie['year']} - {decade}"
+        )
 
 
 if __name__ == "__main__":
