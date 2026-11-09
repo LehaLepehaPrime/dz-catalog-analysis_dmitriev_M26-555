@@ -161,6 +161,30 @@ def top_n_by_rating(movies, n=3):
     return [(movie["title"], movie["rating"]) for movie in sorted_movies[:n]]
 
 
+def count_by_genre(movies):
+    counts = {}
+    for movie in movies:
+        for genre in movie["genres"]:
+            counts[genre] = counts.get(genre, 0) + 1
+    return counts
+
+
+def actor_filmography(movies):
+    filmography = {}
+    for movie in movies:
+        for actor in movie["actors"]:
+            filmography.setdefault(actor, []).append(movie["title"])
+    return filmography
+
+
+def above_average_ratings(movies):
+    """Словарь {title: rating} для фильмов с рейтингом выше среднего."""
+    avg = average_rating(movies)
+    return {
+        movie["title"]: movie["rating"] for movie in movies if movie["rating"] > avg
+    }
+
+
 def main():
     print("Этап 1")
     print(f"  Средняя оценка: {average_rating(movies)}")
@@ -212,6 +236,13 @@ def main():
     for title in titles_sorted_by_rating(movies):
         print(f"    - {title}")
     print(f"  Топ-3: {top_n_by_rating(movies, 3)}")
+
+    print("\nЭтап 6")
+    print(f"  count_by_genre: {count_by_genre(movies)}")
+    print("  actor_filmography:")
+    for actor, titles in actor_filmography(movies).items():
+        print(f"    {actor}: {titles}")
+    print(f"  above_average_ratings: {above_average_ratings(movies)}")
 
 
 if __name__ == "__main__":
