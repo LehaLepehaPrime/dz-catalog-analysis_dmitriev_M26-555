@@ -124,6 +124,33 @@ def decade_label(year):
             return "старые"
 
 
+def count_long_movies(movies, threshold=120):
+    count = 0
+    for movie in movies:
+        if movie["duration_min"] > threshold:
+            count += 1
+    return count
+
+
+def normalize_title(title):
+    words = title.split()
+    return " ".join(word[0].upper() + word[1:] for word in words)
+
+
+def make_slug(title):
+    return title.lower().replace(" ", "-")
+
+
+def format_report_line(movie):
+    normalized = normalize_title(movie["title"])
+    genres = ", ".join(sorted(movie["genres"]))
+    duration = duration_in_hours(movie["duration_min"])
+    return (
+        f'"{normalized}" ({movie["year"]}) — {movie["rating"]}/10, '
+        f"{duration}, жанры: {genres}"
+    )
+
+
 def main():
     print("Этап 1")
     print(f"  Средняя оценка: {average_rating(movies)}")
@@ -140,6 +167,34 @@ def main():
             f"  {movie['title']:<25} rating = {movie['rating']:<4} "
             f"- {tier:<9} year = {movie['year']} - {decade}"
         )
+
+    print("\nЭтап 3")
+    print("Фильмы не в жанре comedy:")
+    for movie in movies:
+        if "comedy" in movie["genres"]:
+            continue
+        print(f"    - {movie['title']}")
+
+    print("Первый фильм с рейтингом > 9.0:")
+    index = 0
+    while index < len(movies):
+        if movies[index]["rating"] > 9.0:
+            print(f"    Найден: {movies[index]['title']} ({movies[index]['rating']})")
+            break
+        index += 1
+    else:
+        print("    Шедевров не найдено")
+
+    print(f"Фильмов длиннее 120 минут: {count_long_movies(movies)}")
+    print("\nЭтап 4")
+    print(f"  normalize_title('silent hours') - {normalize_title('silent hours')}")
+    print(
+        f"  normalize_title('midnight in oslo') - {normalize_title('midnight in oslo')}"
+    )
+    print(f"  make_slug('Silent Hours') - {make_slug('Silent Hours')}")
+    print("  format_report_line для всего каталога:")
+    for movie in movies:
+        print(f"    {format_report_line(movie)}")
 
 
 if __name__ == "__main__":
