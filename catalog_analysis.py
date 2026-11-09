@@ -151,6 +151,16 @@ def format_report_line(movie):
     )
 
 
+def titles_sorted_by_rating(movies):
+    sorted_movies = sorted(movies, key=lambda movie: movie["rating"], reverse=True)
+    return [movie["title"] for movie in sorted_movies]
+
+
+def top_n_by_rating(movies, n=3):
+    sorted_movies = sorted(movies, key=lambda movie: movie["rating"], reverse=True)
+    return [(movie["title"], movie["rating"]) for movie in sorted_movies[:n]]
+
+
 def main():
     print("Этап 1")
     print(f"  Средняя оценка: {average_rating(movies)}")
@@ -186,6 +196,7 @@ def main():
         print("    Шедевров не найдено")
 
     print(f"Фильмов длиннее 120 минут: {count_long_movies(movies)}")
+
     print("\nЭтап 4")
     print(f"  normalize_title('silent hours') - {normalize_title('silent hours')}")
     print(
@@ -195,6 +206,12 @@ def main():
     print("  format_report_line для всего каталога:")
     for movie in movies:
         print(f"    {format_report_line(movie)}")
+
+    print("\nЭтап 5")
+    print("  Названия по убыванию рейтинга:")
+    for title in titles_sorted_by_rating(movies):
+        print(f"    - {title}")
+    print(f"  Топ-3: {top_n_by_rating(movies, 3)}")
 
 
 if __name__ == "__main__":
