@@ -178,11 +178,27 @@ def actor_filmography(movies):
 
 
 def above_average_ratings(movies):
-    """Словарь {title: rating} для фильмов с рейтингом выше среднего."""
     avg = average_rating(movies)
     return {
         movie["title"]: movie["rating"] for movie in movies if movie["rating"] > avg
     }
+
+
+def all_genres(movies):
+    genres = set()
+    for movie in movies:
+        genres |= movie["genres"]
+    return genres
+
+
+def common_actors(movie1, movie2):
+    return set(movie1["actors"]) & set(movie2["actors"])
+
+
+def genres_only_in_one(movies_a, movies_b):
+    genres_a = all_genres(movies_a)
+    genres_b = all_genres(movies_b)
+    return genres_a - genres_b
 
 
 def main():
@@ -243,6 +259,16 @@ def main():
     for actor, titles in actor_filmography(movies).items():
         print(f"    {actor}: {titles}")
     print(f"  above_average_ratings: {above_average_ratings(movies)}")
+
+    print("\nЭтап 7")
+    print(f"  all_genres: {all_genres(movies)}")
+    print(
+        f"  common_actors(movies[0], movies[3]): {common_actors(movies[0], movies[3])}"
+    )
+    print(
+        f"  genres_only_in_one(movies[5:6], movies[:5]): "
+        f"{genres_only_in_one(movies[5:6], movies[:5])}"
+    )
 
 
 if __name__ == "__main__":
