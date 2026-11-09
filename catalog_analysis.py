@@ -108,10 +108,8 @@ def rating_tier(rating):
         return "шедевр"
     elif rating >= 7:
         return "хорошо"
-    elif rating >= 5:
-        return "средне"
     else:
-        return "слабо" if rating < 5 else "средне"
+        return "средне" if rating >= 5 else "слабо"
 
 
 def decade_label(year):
@@ -130,6 +128,23 @@ def count_long_movies(movies, threshold=120):
         if movie["duration_min"] > threshold:
             count += 1
     return count
+
+def print_non_comedy(movies):
+    for movie in movies:
+        if "comedy" in movie["genres"]:
+            continue
+        print(f"  {movie['title']}")
+
+
+def find_first_above_rating(movies, min_rating=9.0):
+    index = 0
+    while index < len(movies):
+        if movies[index]["rating"] > min_rating:
+            print(f"  Найден: {movies[index]['title']} ({movies[index]['rating']})")
+            break
+        index += 1
+    else:
+        print("  Шедевров не найдено")
 
 
 def normalize_title(title):
@@ -230,9 +245,5 @@ def build_report(movies):
     print(f"\nВсе жанры каталога: {', '.join(sorted(all_genres(movies)))}")
 
 
-def main():
-    build_report(movies)
-
-
 if __name__ == "__main__":
-    main()
+    build_report(movies)
